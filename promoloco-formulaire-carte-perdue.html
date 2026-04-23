@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Carte Perdue | PROMOLOCO</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #E63025;
+    --red-dark: #C4221A;
+    --black: #1A1A1A;
+    --white: #FFFFFF;
+    --gray-50: #F9FAFB;
+    --gray-100: #F3F4F6;
+    --gray-200: #E5E7EB;
+    --gray-300: #D1D5DB;
+    --gray-400: #9CA3AF;
+    --gray-500: #6B7280;
+    --gray-700: #374151;
+    --gray-900: #111827;
+    --success: #10B981;
+    --warning: #F59E0B;
+    --info-bg: #EFF6FF;
+    --info-border: #BFDBFE;
+    --info-text: #1E40AF;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: var(--gray-50);
+    color: var(--gray-900);
+    min-height: 100vh;
+  }
+
+  .header {
+    background: var(--white);
+    border-bottom: 1px solid var(--gray-200);
+    padding: 16px 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .header-inner {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo-img { height: 64px; width: auto; border-radius: 8px; display: block; }
+
+  .header-badge {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--red);
+    background: rgba(230, 48, 37, 0.08);
+    padding: 6px 14px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  .main {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  .form-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .form-header h1 {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--black);
+    margin-bottom: 12px;
+    line-height: 1.2;
+  }
+
+  .form-header h1 span { color: var(--red); }
+
+  .form-header p {
+    font-size: 15px;
+    color: var(--gray-500);
+    line-height: 1.6;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  .notice {
+    background: rgba(230, 48, 37, 0.04);
+    border: 1px solid rgba(230, 48, 37, 0.15);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 20px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+
+  .notice-icon {
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    color: var(--red);
+  }
+
+  .notice p {
+    font-size: 13.5px;
+    color: var(--gray-700);
+    line-height: 1.6;
+  }
+
+  .notice strong { color: var(--black); }
+
+  .delivery-notice {
+    background: var(--info-bg);
+    border: 1px solid var(--info-border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 36px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+
+  .delivery-notice-icon {
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    color: var(--info-text);
+  }
+
+  .delivery-notice p {
+    font-size: 13.5px;
+    color: var(--info-text);
+    line-height: 1.6;
+  }
+
+  .delivery-notice strong { color: var(--info-text); font-weight: 700; }
+
+  .info-box {
+    background: var(--info-bg);
+    border: 1px solid var(--info-border);
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-top: 12px;
+    font-size: 13.5px;
+    color: var(--info-text);
+    line-height: 1.6;
+    display: none;
+  }
+
+  .info-box.visible { display: block; }
+
+  .info-box ul {
+    margin-top: 6px;
+    padding-left: 18px;
+  }
+
+  .info-box ul li { margin-bottom: 4px; }
+
+  .form-section {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: 16px;
+    padding: 32px;
+    margin-bottom: 20px;
+    animation: fadeUp 0.5s ease both;
+  }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--red);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--gray-200);
+  }
+
+  .field { margin-bottom: 20px; }
+  .field:last-child { margin-bottom: 0; }
+
+  .field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .field-row-3 {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 16px;
+  }
+
+  @media (max-width: 500px) {
+    .field-row { grid-template-columns: 1fr; }
+    .field-row-3 { grid-template-columns: 1fr; }
+    .form-section { padding: 20px; }
+  }
+
+  label {
+    display: block;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--gray-700);
+    margin-bottom: 6px;
+  }
+
+  label .required { color: var(--red); margin-left: 2px; }
+
+  label .optional {
+    color: var(--gray-400);
+    font-weight: 400;
+    font-size: 12px;
+    margin-left: 4px;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="date"],
+  select,
+  textarea {
+    width: 100%;
+    padding: 12px 16px;
+    font-family: inherit;
+    font-size: 14.5px;
+    color: var(--gray-900);
+    background: var(--gray-50);
+    border: 1.5px solid var(--gray-200);
+    border-radius: 10px;
+    outline: none;
+    transition: all 0.2s ease;
+  }
+
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--red);
+    background: var(--white);
+    box-shadow: 0 0 0 3px rgba(230, 48, 37, 0.08);
+  }
+
+  input::placeholder, textarea::placeholder { color: var(--gray-400); }
+
+  textarea { resize: vertical; min-height: 100px; }
+
+  select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%239CA3AF' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    padding-right: 40px;
+  }
+
+  .submit-btn {
+    width: 100%;
+    padding: 16px 32px;
+    background: var(--red);
+    color: var(--white);
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 700;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    letter-spacing: 0.3px;
+    margin-top: 8px;
+  }
+
+  .submit-btn:hover {
+    background: var(--red-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px rgba(230, 48, 37, 0.25);
+  }
+
+  .submit-btn:active { transform: translateY(0); }
+
+  .footer-note {
+    text-align: center;
+    margin-top: 24px;
+    font-size: 12.5px;
+    color: var(--gray-400);
+    line-height: 1.6;
+  }
+
+  .footer-note a { color: var(--red); text-decoration: none; }
+
+  .success-state { display: none; text-align: center; padding: 60px 24px; }
+  .success-state.active { display: block; }
+
+  .success-icon {
+    width: 64px;
+    height: 64px;
+    background: rgba(16, 185, 129, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    color: var(--success);
+  }
+
+  .success-state h2 { font-size: 24px; font-weight: 800; color: var(--black); margin-bottom: 12px; }
+  .success-state p { font-size: 15px; color: var(--gray-500); line-height: 1.6; max-width: 400px; margin: 0 auto; }
+
+  .form-content.hidden { display: none; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .form-section:nth-child(2) { animation-delay: 0.1s; }
+  .form-section:nth-child(3) { animation-delay: 0.2s; }
+  .form-section:nth-child(4) { animation-delay: 0.3s; }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-inner">
+    <img class="logo-img" src="data:image/jpeg;base64,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v3esi8Aw4mLRi2/R0N/WtZydYypyciefVER1RHdH11gANlyQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB//Z" alt="PROMOLOCO">
+    <span class="header-badge">Carte perdue</span>
+  </div>
+</header>
+
+<main class="main">
+
+  <div class="form-header">
+    <h1>Demande de <span>carte de remplacement</span></h1>
+    <p>Remplissez ce formulaire pour recevoir une nouvelle carte promotionnelle. Nous vous ferons parvenir votre nouvelle carte par la poste.</p>
+  </div>
+
+  <div class="delivery-notice">
+    <svg class="delivery-notice-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="8" width="18" height="13" rx="2"/><path d="M3 10l9 6 9-6"/><path d="M7 4h10l2 4H5z"/>
+    </svg>
+    <p><strong>Délai de livraison :</strong> environ 14 jours ouvrables suite à la réception de votre demande. Vous recevrez une confirmation par courriel lorsque votre carte sera expédiée.</p>
+  </div>
+
+  <div class="notice">
+    <svg class="notice-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+    </svg>
+    <p><strong>Condition :</strong> pour obtenir une carte de remplacement, votre carte originale doit être active (moins d'un an depuis votre première visite). Une preuve de paiement originale peut être requise pour valider votre demande.</p>
+  </div>
+
+  <div class="form-content" id="formContent">
+
+    <div class="form-section">
+      <div class="section-label">Vos informations</div>
+
+      <div class="field-row field">
+        <div class="field">
+          <label>Nom complet <span class="required">*</span></label>
+          <input type="text" id="fullName" placeholder="Jean Tremblay" required>
+        </div>
+        <div class="field">
+          <label>Téléphone <span class="required">*</span></label>
+          <input type="tel" id="phone" placeholder="(514) 000-0000" required>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Courriel <span class="required">*</span></label>
+        <input type="email" id="email" placeholder="jean@exemple.com" required>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="section-label">Informations sur la carte perdue</div>
+
+      <div class="field">
+        <label>Numéro de la carte promotionnelle <span class="optional">(si vous vous en souvenez)</span></label>
+        <input type="text" id="cardNumber" placeholder="Ex: 245">
+      </div>
+
+      <div class="field">
+        <label>Nom de l'entreprise (garage / concessionnaire / centre esthétique) <span class="required">*</span></label>
+        <input type="text" id="businessName" placeholder="Ex: Lallier Honda Hull" required>
+      </div>
+
+      <div class="field-row field">
+        <div class="field">
+          <label>Ville où la carte a été vendue <span class="required">*</span></label>
+          <input type="text" id="city" placeholder="Ex: Gatineau" required>
+        </div>
+        <div class="field">
+          <label>Date d'achat approximative <span class="required">*</span></label>
+          <input type="date" id="purchaseDate" required>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Méthode de paiement utilisée lors de l'achat <span class="required">*</span></label>
+        <select id="paymentMethod" required>
+          <option value="" disabled selected>Sélectionnez une option</option>
+          <option value="virement">Virement Interac</option>
+          <option value="cash">Comptant (cash)</option>
+          <option value="cheque">Chèque</option>
+          <option value="credit">Carte de crédit</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Circonstance de la perte <span class="required">*</span></label>
+        <textarea id="lostReason" placeholder="Expliquez brièvement comment vous avez perdu votre carte (ex: perdue dans le véhicule vendu, égarée lors d'un déménagement, volée, etc.)" required></textarea>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="section-label">Adresse de livraison</div>
+
+      <div class="info-box visible" style="margin-bottom: 20px;">
+        <strong>Important :</strong> assurez-vous que l'adresse soit complète et exacte. Nous ne sommes pas responsables des envois retournés pour cause d'adresse erronée.
+      </div>
+
+      <div class="field">
+        <label>Adresse civique <span class="required">*</span></label>
+        <input type="text" id="streetAddress" placeholder="Ex: 123 rue Principale, appartement 4" required>
+      </div>
+
+      <div class="field-row-3 field">
+        <div class="field">
+          <label>Ville <span class="required">*</span></label>
+          <input type="text" id="shippingCity" placeholder="Ex: Montréal" required>
+        </div>
+        <div class="field">
+          <label>Province <span class="required">*</span></label>
+          <select id="province" required>
+            <option value="" disabled selected>Choisir</option>
+            <option value="QC">QC</option>
+            <option value="ON">ON</option>
+            <option value="NB">NB</option>
+            <option value="NS">NS</option>
+            <option value="PE">PE</option>
+            <option value="NL">NL</option>
+            <option value="MB">MB</option>
+            <option value="SK">SK</option>
+            <option value="AB">AB</option>
+            <option value="BC">BC</option>
+            <option value="YT">YT</option>
+            <option value="NT">NT</option>
+            <option value="NU">NU</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Code postal <span class="required">*</span></label>
+          <input type="text" id="postalCode" placeholder="H1A 1A1" maxlength="7" required>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Instructions de livraison <span class="optional">(optionnel)</span></label>
+        <textarea id="deliveryInstructions" placeholder="Ex: laisser dans la boîte aux lettres, sonner à l'appartement 4, etc."></textarea>
+      </div>
+    </div>
+
+    <button class="submit-btn" id="submitBtn" onclick="submitForm()">
+      Soumettre ma demande de nouvelle carte
+    </button>
+
+    <p class="footer-note">
+      En soumettant ce formulaire, vous confirmez que les informations fournies sont exactes.<br>
+      Des questions? Contactez-nous à <a href="mailto:infopromoloco@gmail.com">infopromoloco@gmail.com</a> ou au <a href="tel:4388824237">438-882-4237</a>
+    </p>
+
+  </div>
+
+  <div class="success-state" id="successState">
+    <div class="success-icon">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"/>
+      </svg>
+    </div>
+    <h2>Demande envoyée!</h2>
+    <p>Votre demande de nouvelle carte a bien été reçue. Notre équipe va la traiter et vous recevrez un courriel de confirmation lorsque votre carte sera expédiée — délai d'environ 14 jours ouvrables.</p>
+  </div>
+
+</main>
+
+<script>
+  function submitForm() {
+    const data = {
+      fullName:             document.getElementById('fullName').value,
+      phone:                document.getElementById('phone').value,
+      email:                document.getElementById('email').value,
+      cardNumber:           document.getElementById('cardNumber').value || 'Non fourni',
+      businessName:         document.getElementById('businessName').value,
+      city:                 document.getElementById('city').value,
+      purchaseDate:         document.getElementById('purchaseDate').value,
+      paymentMethod:        document.getElementById('paymentMethod').value,
+      lostReason:           document.getElementById('lostReason').value,
+      streetAddress:        document.getElementById('streetAddress').value,
+      shippingCity:         document.getElementById('shippingCity').value,
+      province:             document.getElementById('province').value,
+      postalCode:           document.getElementById('postalCode').value,
+      deliveryInstructions: document.getElementById('deliveryInstructions').value || 'Aucune',
+      submittedAt:          new Date().toISOString(),
+      requestType:          'Carte perdue'
+    };
+
+    const required = ['fullName', 'phone', 'email', 'businessName', 'city', 'purchaseDate', 'paymentMethod', 'lostReason', 'streetAddress', 'shippingCity', 'province', 'postalCode'];
+    const missing = required.filter(f => !data[f]);
+
+    if (missing.length > 0) {
+      const labels = {
+        fullName: 'Nom complet', phone: 'Téléphone', email: 'Courriel',
+        businessName: "Nom de l'entreprise", city: 'Ville de vente',
+        purchaseDate: "Date d'achat", paymentMethod: 'Méthode de paiement',
+        lostReason: 'Circonstance de la perte',
+        streetAddress: 'Adresse civique', shippingCity: 'Ville de livraison',
+        province: 'Province', postalCode: 'Code postal'
+      };
+      const manquants = missing.map(f => labels[f] || f).join(', ');
+      alert('Veuillez remplir les champs obligatoires suivants :\n\n' + manquants);
+      return;
+    }
+
+    const postalRegex = /^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$/;
+    if (!postalRegex.test(data.postalCode)) {
+      alert('Le code postal doit être au format canadien (ex: H1A 1A1).');
+      return;
+    }
+
+    console.log('Carte perdue data:', data);
+
+    document.getElementById('formContent').classList.add('hidden');
+    document.getElementById('successState').classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+
+</body>
+</html>
