@@ -812,12 +812,51 @@
       return;
     }
 
-    // TODO: fetch('/api/refund', { method: 'POST', body: JSON.stringify(data) })
-    console.log('Remboursement data:', data);
+    // Envoi vers n8n webhook
+    const submitBtn = document.querySelector('.btn-submit');
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Envoi en cours...';
+    }
 
-    document.getElementById('formContent').classList.add('hidden');
-    document.getElementById('successState').classList.add('active');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    fetch('https://promoloco.app.n8n.cloud/webhook/sophie-form-submission', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        form_type: 'remboursement',
+        nom_client: data.fullName,
+        telephone: data.phone,
+        courriel: data.email,
+        adresse: data.address,
+        numero_carte: data.cardNumber,
+        nom_entreprise: data.businessName,
+        ville: data.city,
+        date_achat: data.purchaseDate,
+        services_utilises: data.servicesUsed,
+        methode_paiement: data.paymentMethod,
+        statut_cheque: data.chequeStatus,
+        nom_representant: data.repName,
+        derniers_chiffres_cc: data.creditLast4,
+        raison: data.reason,
+        montant: data.amountPaid,
+        courriel_virement: data.refundEmail,
+        meme_courriel: data.sameEmail,
+        type_cas: data.typeCase,
+        lien_preuve: ''
+      })
+    })
+    .then(() => {
+      document.getElementById('formContent').classList.add('hidden');
+      document.getElementById('successState').classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    })
+    .catch(() => {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Soumettre ma demande';
+      }
+      alert('Une erreur est survenue. Veuillez réessayer ou écrire à infopromoloco@gmail.com');
+    });
   }
 </script>
 

@@ -544,11 +544,42 @@
       return;
     }
 
-    console.log('Carte perdue data:', data);
 
-    document.getElementById('formContent').classList.add('hidden');
-    document.getElementById('successState').classList.add('active');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Envoi vers n8n webhook
+    const submitBtn = document.querySelector('.btn-submit');
+    if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Envoi en cours...'; }
+
+    fetch('https://promoloco.app.n8n.cloud/webhook/sophie-form-submission', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        form_type: 'carte_perdue',
+        nom_client: data.fullName,
+        telephone: data.phone,
+        courriel: data.email,
+        numero_carte: data.cardNumber,
+        nom_entreprise: data.businessName,
+        ville_vente: data.city,
+        date_achat: data.purchaseDate,
+        methode_paiement: data.paymentMethod,
+        circonstance: data.lostReason,
+        adresse: data.streetAddress,
+        ville: data.shippingCity,
+        province: data.province,
+        code_postal: data.postalCode,
+        instructions_livraison: data.deliveryInstructions
+      })
+    })
+    .then(() => {
+      document.getElementById('formContent').classList.add('hidden');
+      document.getElementById('successState').classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    })
+    .catch(() => {
+      if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Soumettre ma demande'; }
+      alert('Une erreur est survenue. Veuillez réessayer ou écrire à infopromoloco@gmail.com');
+    });
   }
 </script>
 
